@@ -1,4 +1,5 @@
 import telebot
+from loguru import logger
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
@@ -18,6 +19,7 @@ class TelegramNotifications:
     def send_msg(self, text: str) -> None:
         if settings.notifications_enabled:
             try:
+                logger.warning(f"Sending Notification: {text}")
                 self.bot.send_message(
                     chat_id=self.chat_id,
                     text=text.translate(TelegramNotifications.MSG_REPLACEMENTS),
@@ -32,6 +34,7 @@ class TelegramNotifications:
                 )
 
     def notify(self) -> None:
+        logger.warning("Beginning Notification Run")
         with Session(engine) as session:
             posts = session.execute(select(DB_Posts).where(DB_Posts.notification_sent.is_(False)))
             for (post,) in posts:

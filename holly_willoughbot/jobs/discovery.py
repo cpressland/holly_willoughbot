@@ -15,11 +15,12 @@ class Discovery:
         pass
 
     def posts(self) -> None:
+        logger.warning("Beginning Post Discovery")
         with Session(engine) as session:
             for subreddit in settings.subreddits.split(","):
                 logger.warning(f"Processing Subreddit: {subreddit}")
                 for post in reddit.subreddit(subreddit).new(limit=settings.subreddit_search_limit):
-                    logger.info(f"Processing post: {post.id}, Archived: {post.archived}")
+                    logger.info(f"Processing post: {post.id}")
                     try:
                         insert = DB_Posts(
                             id=post.id,
@@ -36,6 +37,7 @@ class Discovery:
                 session.commit()
 
     def comments(self) -> None:
+        logger.warning("Beginning Comment Discovery")
         with Session(engine) as session:
             for subreddit in settings.subreddits.split(","):
                 logger.warning(f"Processing Subreddit: {subreddit}")
@@ -44,6 +46,7 @@ class Discovery:
                 ).all()
                 for (post_id,) in posts:
                     for comment in reddit.submission(id=post_id).comments.list():
+                        logger.info(f"Processing Comment: {comment.id}")
                         try:
                             insert = DB_Comments(
                                 id=comment.id,
@@ -57,10 +60,3 @@ class Discovery:
                             continue
                         session.merge(insert)
                     session.commit()
-
-    def loop(self) -> None:
-        while True:
-            self.posts()
-            self.comments()
-            logger.warning("Discovery Complete, sleeping for 5 minutes")
-            sleep(300)

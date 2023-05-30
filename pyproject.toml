@@ -20,6 +20,7 @@ psycopg = "^3.1.9"
 alembic = "^1.11.1"
 loguru = "^0.7.0"
 pendulum = "^2.1.2"
+apscheduler = "^3.10.1"
 
 
 [tool.poetry.group.dev.dependencies]
