@@ -48,8 +48,9 @@ class Discovery:
                             insert = DB_Comments(
                                 id=comment.id,
                                 post_id=post_id,
-                                author=comment.author.name,
                                 body=comment.body,
+                                author=comment.author.name,
+                                permalink=comment.permalink,
                                 created=pendulum.from_timestamp(comment.created_utc),
                             )
                         except AttributeError:

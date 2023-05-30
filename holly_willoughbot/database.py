@@ -27,6 +27,7 @@ class DB_Comments(base):
     post_id = Column(String, ForeignKey("posts.id"))
     author = Column(String)
     body = Column(String)
+    permalink = Column(String)
     created = Column(DateTime)
     notification_sent = Column(Boolean, server_default=false())
 
