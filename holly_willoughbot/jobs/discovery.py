@@ -50,6 +50,7 @@ class Discovery:
                                 post_id=post_id,
                                 author=comment.author.name,
                                 body=comment.body,
+                                created=pendulum.from_timestamp(comment.created_utc),
                             )
                         except AttributeError:
                             continue
