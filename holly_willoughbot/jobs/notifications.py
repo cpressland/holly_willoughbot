@@ -9,7 +9,7 @@ from holly_willoughbot.settings import settings
 
 class TelegramNotifications:
     MSG_REPLACEMENTS = str.maketrans(
-        {">": "\>", "(": "\(", ")": "\)", "!": "\!", "#": "\#", "-": "\-", "_": "\_", ":": "\:", ".": "\."}
+        {">": "\>", "(": "\(", ")": "\)", "!": "\!", "#": "\#", "-": "\-", "_": "\_", ":": "\:", ".": "\.", "=": "\="}
     )
 
     def __init__(self) -> None:

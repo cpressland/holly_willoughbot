@@ -1,5 +1,3 @@
-from time import sleep
-
 import pendulum
 from loguru import logger
 from sqlalchemy import select
