@@ -1,7 +1,10 @@
-from pydantic import BaseSettings
+"""Module containing Application Settings."""
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Setup Applicaiton Settings."""
+
     client_id: str
     client_secret: str
     user_agent: str = "python:holly_willoughbot:v1.0.0 (by /u/cpressland)"

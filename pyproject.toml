@@ -12,7 +12,6 @@ holly = "holly_willoughbot.cli:cli"
 python = "^3.11"
 praw = "^7.7.0"
 click = "^8.1.3"
-pydantic = "^1.10.6"
 trogon = "^0.4.0"
 pytelegrambotapi = "^4.12.0"
 sqlalchemy = "^2.0.15"
@@ -21,6 +20,7 @@ alembic = "^1.11.1"
 loguru = "^0.7.0"
 pendulum = "^2.1.2"
 apscheduler = "^3.10.1"
+pydantic-settings = "^2.0.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -34,6 +34,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 120
+select = ["ALL"]
+ignore = ["W605", "ANN101", "G004", "FBT003", "D407", "D203", "D213"]
 
 [tool.black]
 line-length = 120

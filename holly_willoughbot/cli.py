@@ -1,3 +1,4 @@
+"""Module Containing the CLI."""
 import click
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -10,31 +11,31 @@ from holly_willoughbot.jobs.notifications import TelegramNotifications
 
 @tui()
 @click.group()
-def cli() -> None:
+def cli() -> None:  # noqa: D103
     pass
 
 
 @cli.command(name="notifications")
-def notifications():
+def notifications() -> None:  # noqa: D103
     job = TelegramNotifications()
     job.notify()
 
 
 @cli.command(name="discovery")
-def discovery() -> None:
+def discovery() -> None:  # noqa: D103
     job = Discovery()
     job.posts()
     job.comments()
 
 
 @cli.command(name="lock")
-def lock() -> None:
+def lock() -> None:  # noqa: D103
     job = ThreadLock()
     job.lock()
 
 
 @cli.command(name="cron")
-def cron() -> None:
+def cron() -> None:  # noqa: D103
     discovery = Discovery()
     notifications = TelegramNotifications()
     locks = ThreadLock()

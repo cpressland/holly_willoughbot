@@ -1,7 +1,7 @@
-"""Initial Database
+"""Initial Database.
 
 Revision ID: 1e3fff1d095b
-Revises: 
+Revises:
 Create Date: 2023-05-29 18:17:30.052214
 
 """
@@ -17,6 +17,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+    """Create posts and comments tables."""
     op.create_table(
         "posts",
         sa.Column("id", sa.String, primary_key=True),
@@ -39,4 +40,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    pass
+    """Drop posts and comments tables."""
+    op.drop_table("posts")
+    op.drop_table("comments")

@@ -1,4 +1,4 @@
-"""Add DateTime to Comments Table
+"""Add DateTime to Comments Table.
 
 Revision ID: 7fb17d8d81d9
 Revises: 1e3fff1d095b
@@ -17,6 +17,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+    """Add a created column to comments table."""
     op.add_column(
         "comments",
         sa.Column("created", sa.DateTime),
@@ -24,4 +25,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Remove the created column from comments table."""
     op.drop_column("comments", "created")

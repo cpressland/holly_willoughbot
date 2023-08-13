@@ -1,22 +1,42 @@
+"""Module Containing Notification Features."""
 import telebot
 from loguru import logger
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from holly_willoughbot.database import DB_Comments, DB_Posts, engine
+from holly_willoughbot.database import DBComments, DBPosts, engine
 from holly_willoughbot.settings import settings
 
 
 class TelegramNotifications:
+    """Send Notifications to Telegram."""
+
     MSG_REPLACEMENTS = str.maketrans(
-        {">": "\>", "(": "\(", ")": "\)", "!": "\!", "#": "\#", "-": "\-", "_": "\_", ":": "\:", ".": "\.", "=": "\="}
+        {
+            ">": "\>",
+            "(": "\(",
+            ")": "\)",
+            "!": "\!",
+            "#": "\#",
+            "-": "\-",
+            "_": "\_",
+            ":": "\:",
+            ".": "\.",
+            "=": "\=",
+        },
     )
 
     def __init__(self) -> None:
+        """Initialize the TelegramNotifications Class."""
         self.chat_id = "-820505138"
         self.bot = telebot.TeleBot(token=settings.telegram_token)
 
     def send_msg(self, text: str) -> None:
+        """If notifications are enabled, send a message to Telegram.
+
+        Args:
+            text (str): The message to send.
+        """
         if settings.notifications_enabled:
             try:
                 logger.warning(f"Sending Notification: {text}")
@@ -34,9 +54,10 @@ class TelegramNotifications:
                 )
 
     def notify(self) -> None:
+        """Scan database for pending notifications and send them."""
         logger.warning("Beginning Notification Run")
         with Session(engine) as session:
-            posts = session.execute(select(DB_Posts).where(DB_Posts.notification_sent.is_(False)))
+            posts = session.execute(select(DBPosts).where(DBPosts.notification_sent.is_(False)))
             for (post,) in posts:
                 self.send_msg(
                     text=(
@@ -45,12 +66,12 @@ class TelegramNotifications:
                         f"*User:* {post.author}\n"
                         f"*Date:* {post.created}\n"
                         f"*URL:* http://www.reddit.com{post.permalink}"
-                    )
+                    ),
                 )
-                session.execute(update(DB_Posts).where(DB_Posts.id == post.id).values(notification_sent=True))
+                session.execute(update(DBPosts).where(DBPosts.id == post.id).values(notification_sent=True))
             session.commit()
 
-            comments = session.execute(select(DB_Comments).where(DB_Comments.notification_sent.is_(False)))
+            comments = session.execute(select(DBComments).where(DBComments.notification_sent.is_(False)))
             for (comment,) in comments:
                 self.send_msg(
                     text=(
@@ -60,7 +81,7 @@ class TelegramNotifications:
                         f"*URL*: http://www.reddit.com{comment.permalink}\n"
                         "*Body*:\n"
                         f"{comment.body}\n\n"
-                    )
+                    ),
                 )
-                session.execute(update(DB_Comments).where(DB_Comments.id == comment.id).values(notification_sent=True))
+                session.execute(update(DBComments).where(DBComments.id == comment.id).values(notification_sent=True))
             session.commit()

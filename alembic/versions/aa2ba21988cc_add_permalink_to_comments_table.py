@@ -1,4 +1,4 @@
-"""Add Permalink to Comments Table
+"""Add Permalink to Comments Table.
 
 Revision ID: aa2ba21988cc
 Revises: 7fb17d8d81d9
@@ -17,6 +17,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+    """Add a permalink column to comments table."""
     op.add_column(
         "comments",
         sa.Column("permalink", sa.String),
@@ -24,4 +25,5 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Remove the permalink column from comments table."""
     op.drop_column("comments", "permalink")

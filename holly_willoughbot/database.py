@@ -1,34 +1,41 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, create_engine, false
-from sqlalchemy.orm import declarative_base, relationship
+"""Module containing Database Schema Classes."""
+from datetime import datetime
+
+from sqlalchemy import ForeignKey, create_engine, false
+from sqlalchemy.orm import DeclarativeBase, Mapped, declarative_base, mapped_column, relationship
 
 from holly_willoughbot.settings import settings
 
 engine = create_engine(settings.database_dsn, echo=False)
-base = declarative_base()
+Base: DeclarativeBase = declarative_base()
 
 
-class DB_Posts(base):
+class DBPosts(Base):
+    """Database Table containing a record of all discovered Posts."""
+
     __tablename__ = "posts"
 
-    id = Column(String, primary_key=True)
-    subreddit = Column(String)
-    title = Column(String)
-    author = Column(String)
-    created = Column(DateTime)
-    permalink = Column(String)
-    locked = Column(Boolean)
-    notification_sent = Column(Boolean, server_default=false())
+    id: Mapped[str] = mapped_column(primary_key=True)  # noqa: A003
+    subreddit: Mapped[str | None]
+    title: Mapped[str | None]
+    author: Mapped[str | None]
+    created: Mapped[datetime | None]
+    permalink: Mapped[str | None]
+    locked: Mapped[bool | None]
+    notification_sent: Mapped[bool] = mapped_column(server_default=false())
 
 
-class DB_Comments(base):
+class DBComments(Base):
+    """Database Table containing a record of all discovered Comments."""
+
     __tablename__ = "comments"
 
-    id = Column(String, primary_key=True)
-    post_id = Column(String, ForeignKey("posts.id"))
-    author = Column(String)
-    body = Column(String)
-    permalink = Column(String)
-    created = Column(DateTime)
-    notification_sent = Column(Boolean, server_default=false())
+    id: Mapped[str] = mapped_column(primary_key=True)  # noqa: A003
+    post_id: Mapped[str] = mapped_column(ForeignKey("posts.id"))
+    author: Mapped[str | None]
+    body: Mapped[str | None]
+    permalink: Mapped[str | None]
+    created: Mapped[datetime | None]
+    notification_sent: Mapped[bool] = mapped_column(server_default=false())
 
-    posts = relationship("DB_Posts")
+    posts = relationship("DBPosts")

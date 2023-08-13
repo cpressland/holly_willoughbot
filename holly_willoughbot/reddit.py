@@ -1,3 +1,4 @@
+"""Setup the praw library."""
 import praw
 
 from holly_willoughbot.settings import settings
