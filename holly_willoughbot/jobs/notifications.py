@@ -1,4 +1,6 @@
 """Module Containing Notification Features."""
+from time import sleep
+
 import telebot
 from loguru import logger
 from sqlalchemy import select, update
@@ -46,6 +48,7 @@ class TelegramNotifications:
                     parse_mode="MarkdownV2",
                     disable_web_page_preview=True,
                 )
+                sleep(5)
             except telebot.apihelper.ApiTelegramException as e:
                 self.bot.send_message(
                     chat_id=self.chat_id,
