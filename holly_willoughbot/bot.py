@@ -209,7 +209,7 @@ class Bot:
         while True:
             self.search_posts()
             self.search_comments()
-            self.first_run()
+            self.nuke_notifications()
             self.lock_posts()
             self.notify()
             sleep(300)
