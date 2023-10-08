@@ -1,47 +1,37 @@
-"""Module Containing the CLI."""
+"""Module containing the CLI."""
+
+import asyncio
+
 import click
-from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.triggers.cron import CronTrigger
-from trogon import tui
+from piccolo.apps.migrations.commands.forwards import forwards as migrate
 
-from holly_willoughbot.jobs.discovery import Discovery
-from holly_willoughbot.jobs.lock import ThreadLock
-from holly_willoughbot.jobs.notifications import TelegramNotifications
+from holly_willoughbot.bot import Bot
 
 
-@tui()
-@click.group()
-def cli() -> None:  # noqa: D103
-    pass
+@click.command()
+@click.option(
+    "--first-run",
+    is_flag=True,
+    help="Run the bot for the first time, ignores --search-limit and disables notifications. Avoids spamming telegram.",
+)
+@click.option("--search-limit", default=25, help="Number of posts to search.", show_default=True)
+@click.option(
+    "--subreddits",
+    default="TheHollyWilloughby,Kym_Marsh,rochelle_humes,UnaHealy",
+    help="Comma separated list of subreddits to monitor.",
+    show_default=True,
+)
+@click.option("--lock-age", default=7, help="Age of posts to lock.", show_default=True)
+def cli(first_run: bool, search_limit: int, subreddits: str, lock_age: int) -> None:
+    """Run the CLI."""
+    bot = Bot(
+        first_run=first_run,
+        search_limit=search_limit,
+        subreddits=subreddits,
+        lock_age=lock_age,
+    )
+    asyncio.run(migrate(app_name="holly_willoughbot"))
+    bot.loop()
 
 
-@cli.command(name="notifications")
-def notifications() -> None:  # noqa: D103
-    job = TelegramNotifications()
-    job.notify()
-
-
-@cli.command(name="discovery")
-def discovery() -> None:  # noqa: D103
-    job = Discovery()
-    job.posts()
-    job.comments()
-
-
-@cli.command(name="lock")
-def lock() -> None:  # noqa: D103
-    job = ThreadLock()
-    job.lock()
-
-
-@cli.command(name="cron")
-def cron() -> None:  # noqa: D103
-    discovery = Discovery()
-    notifications = TelegramNotifications()
-    locks = ThreadLock()
-    scheduler = BlockingScheduler()
-    scheduler.add_job(discovery.posts, "interval", minutes=5)
-    scheduler.add_job(discovery.comments, "interval", minutes=5)
-    scheduler.add_job(notifications.notify, "interval", minutes=1)
-    scheduler.add_job(locks.lock, trigger=CronTrigger.from_crontab("10 0 * * *"))
-    scheduler.start()
+cli(max_content_width=256)
