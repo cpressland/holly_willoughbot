@@ -173,6 +173,7 @@ class Bot:
             Comments.select(
                 Comments.comment_id,
                 Comments.post_id.subreddit,
+                Comments.post_id.post_id,
                 Comments.author,
                 Comments.created,
                 Comments.body,
@@ -184,7 +185,7 @@ class Bot:
         for comment in comments:
             logger.info(
                 "Sending Comment Notification",
-                extra={"subreddit": comment["post_id.subreddit"], "post_id": comment["post_id"].post_id},
+                extra={"subreddit": comment["post_id.subreddit"], "post_id": comment["post_id.post_id"]},
             )
             self._send_message(
                 msg=(
