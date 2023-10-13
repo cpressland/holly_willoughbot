@@ -67,33 +67,30 @@ class Bot:
 
     def search_comments(self) -> None:
         """Search Reddit Posts for new Comments and add them to the database."""
-        posts = Posts.select(Posts.post_id, Posts.subreddit).where(Posts.locked.eq(value=False)).run_sync()
+        posts = Posts.select(Posts.id, Posts.post_id, Posts.subreddit).where(Posts.locked.eq(value=False)).run_sync()
         for post in posts:
             for comment in self.reddit.submission(id=post["post_id"]).comments.list():
                 already_exists = Comments.exists().where(Comments.comment_id == comment.id).run_sync()
-                try:
+                logger.info(
+                    "Searching Comments",
+                    extra={"subreddit": post["subreddit"], "post_id": post["post_id"]},
+                )
+                if not already_exists and comment.author is not None and comment.author.name != "AutoModerator":
                     logger.info(
-                        "Searching Comments",
-                        extra={"subreddit": post["subreddit"], "post_id": post["post_id"]},
+                        "Processing Comment",
+                        extra={"subreddit": post["subreddit"], "post_id": post["post_id"], "comment": comment.body},
                     )
-                    if not already_exists and comment.author.name != "AutoModerator":
-                        logger.info(
-                            "Processing Comment",
-                            extra={"subreddit": post["subreddit"], "post_id": post["post_id"], "comment": comment.body},
-                        )
-                        Comments.insert(
-                            Comments(
-                                comment_id=comment.id,
-                                post_id=Posts(post_id=post["post_id"]),
-                                author=comment.author.name,
-                                created=pendulum.from_timestamp(comment.created_utc).to_iso8601_string(),
-                                body=comment.body,
-                                url=f"https://reddit.com{comment.permalink}",
-                                notified=False,
-                            ),
-                        ).run_sync()
-                except AttributeError:
-                    continue
+                    Comments.insert(
+                        Comments(
+                            comment_id=comment.id,
+                            post_id=Posts(id=post["id"]),
+                            author=comment.author.name,
+                            created=pendulum.from_timestamp(comment.created_utc).to_iso8601_string(),
+                            body=comment.body,
+                            url=f"https://reddit.com{comment.permalink}",
+                            notified=False,
+                        ),
+                    ).run_sync()
 
     def nuke_notifications(self) -> None:
         """Flag all posts and comments to notified."""
@@ -175,7 +172,7 @@ class Bot:
         comments = (
             Comments.select(
                 Comments.comment_id,
-                Comments.post_id,
+                Comments.post_id.subreddit,
                 Comments.author,
                 Comments.created,
                 Comments.body,
@@ -187,12 +184,12 @@ class Bot:
         for comment in comments:
             logger.info(
                 "Sending Comment Notification",
-                extra={"subreddit": comment["post_id"].subreddit, "post_id": comment["post_id"].post_id},
+                extra={"subreddit": comment["post_id.subreddit"], "post_id": comment["post_id"].post_id},
             )
             self._send_message(
                 msg=(
                     "*New Comment*:\n\n"
-                    f"*Subreddit:* {comment['post_id'].subreddit}\n"
+                    f"*Subreddit:* {comment['post_id.subreddit']}\n"
                     f"*User*: {comment['author']}\n"
                     f"*Date*: {comment['created']}\n"
                     f"*URL*: {comment['url']}\n"
