@@ -28,6 +28,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
 select = ["ALL"]
 ignore = ["ANN101", "D203", "D213", "D407", "FBT001", "W605"]
 
