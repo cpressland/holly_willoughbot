@@ -21,6 +21,7 @@ class Bot:
             search_limit (int): The number of posts to search.
             subreddits (str): The subreddits to search.
             lock_age (int): The age in days of posts to lock.
+
         """
         self.first_run = first_run
         self.search_limit = search_limit
