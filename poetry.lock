@@ -510,13 +510,13 @@ test = ["time-machine (>=2.6.0)"]
 
 [[package]]
 name = "piccolo"
-version = "1.12.0"
+version = "1.13.0"
 description = "A fast, user friendly ORM and query builder which supports asyncio."
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "piccolo-1.12.0-py3-none-any.whl", hash = "sha256:4830e56892f8d4db38f92629ccad568ab8119ad9b457f114556422d241c2415c"},
-    {file = "piccolo-1.12.0.tar.gz", hash = "sha256:1ce7b791727ffc2a234efc86708f5b049cebe8af431cb99c8e18c0bfed5e26fd"},
+    {file = "piccolo-1.13.0-py3-none-any.whl", hash = "sha256:33c2dd9948af41718592394c06b4e02cee65bd73f3ac7e39384fc978bcadd0c1"},
+    {file = "piccolo-1.13.0.tar.gz", hash = "sha256:5e71782b184f561394cbb5bfd584b4acfe084145f523b185d6cf9ffcfe2003a9"},
 ]
 
 [package.dependencies]
@@ -943,4 +943,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "f106a49f4a5089c26ea50fcb6c12185f9e153820614d152b3880dd9046bd08ac"
+content-hash = "772ec3d958647ada4d0a9140f073014ed561a9c30fa435196dcc3fbff3d3e7e8"
