@@ -727,13 +727,13 @@ yaml = ["pyyaml (>=6.0.1)"]
 
 [[package]]
 name = "pytelegrambotapi"
-version = "4.21.0"
+version = "4.26.0"
 description = "Python Telegram bot api."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 files = [
-    {file = "pytelegrambotapi-4.21.0-py3-none-any.whl", hash = "sha256:686813e4d4f9e917530cd9cd411d62265293f12783294ebef87f8a1fe195b262"},
-    {file = "pytelegrambotapi-4.21.0.tar.gz", hash = "sha256:b32cde09f295f80330253cc185104f02c4d70041782d3524c4cc424abbaba636"},
+    {file = "pytelegrambotapi-4.26.0-py3-none-any.whl", hash = "sha256:6a7a10571dcecc01aac917269baf4321a0518d5db1fe57b6a09b76cab2bd6b91"},
+    {file = "pytelegrambotapi-4.26.0.tar.gz", hash = "sha256:ba92f6a83bf991cbf189577dbc314976032ad8a3fbe6cd631d0ccd79db8523f9"},
 ]
 
 [package.dependencies]
@@ -741,7 +741,6 @@ requests = "*"
 
 [package.extras]
 aiohttp = ["aiohttp"]
-aioredis = ["aioredis"]
 coloredlogs = ["coloredlogs"]
 fastapi = ["fastapi"]
 json = ["ujson"]
