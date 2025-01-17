@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: docker.io/postgres:17
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: holly_willoughbot
+    ports:
+      - 5432:5432

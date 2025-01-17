@@ -1,39 +1,38 @@
-[tool.poetry]
+[project]
 name = "holly-willoughbot"
 version = "0.0.0"
 description = "Moderates various Subreddits"
-authors = ["Chris Pressland <mail@cpressland.io>"]
+authors = [{ name = "Chris Pressland", email = "mail@cpressland.io" }]
+requires-python = ">=3.13"
 readme = "README.md"
+dependencies = [
+    "praw>=7.8.1",
+    "loguru>=0.7.3",
+    "piccolo[postgres]>=1.22.0",
+    "pytelegrambotapi>=4.26.0",
+    "typer>=0.15.1",
+    "piccolo-admin>=1.9.0",
+    "fastapi>=0.115.6",
+    "uvicorn>=0.34.0",
+    "pydantic-settings>=2.7.1",
+    "pydantic>=2.10.5",
+]
 
-[tool.poetry.scripts]
-holly = "holly_willoughbot.cli:cli"
+[project.scripts]
+holly = "holly_willoughbot:cli"
 
-[tool.poetry.dependencies]
-python = "^3.12"
-praw = "^7.7.1"
-pydantic-settings = {extras = ["dotenv"], version = "^2.0.3"}
-piccolo = {version = "1.13.1", extras = ["sqlite"]}
-loguru = "^0.7.2"
-pytelegrambotapi = "^4.14.0"
-click = "^8.1.7"
-pendulum = "^3.0.0"
+[dependency-groups]
+dev = ["ruff>=0.5.7"]
 
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.5.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+package = true
 
 [tool.ruff]
 line-length = 120
-lint.select = ["ALL"]
-lint.ignore = ["ANN101", "D203", "D213", "D407", "FBT001", "W605"]
 
-[tool.black]
-line-length = 120
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D213", "D407", "FBT001", "FBT002", "W605"]
 
-[tool.isort]
-profile = "black"
-line_length = 120
+[tool.ruff.lint.per-file-ignores]
+"holly_willoughbot/migrations/**.py" = ["ALL"]
