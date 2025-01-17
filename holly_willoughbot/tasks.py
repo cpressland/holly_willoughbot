@@ -48,7 +48,7 @@ def notify() -> None:
         ):
             send_message(
                 client_id=subreddit.telegram_client,
-                msg=(
+                message=(
                     "*New Post*:\n\n"
                     f"*Title:* {submission.title}\n"
                     f"*Subreddit:* {subreddit.subreddit}\n"
@@ -66,7 +66,7 @@ def notify() -> None:
         ):
             send_message(
                 client_id=subreddit.telegram_client,
-                msg=(
+                message=(
                     "*New Comment*:\n\n"
                     f"*Subreddit:* {subreddit.subreddit}\n"
                     f"*User*: {comment.author}\n"
