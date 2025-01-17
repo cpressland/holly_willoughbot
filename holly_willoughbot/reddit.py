@@ -4,6 +4,7 @@ import datetime
 
 from loguru import logger as log
 from praw import Reddit
+from prawcore import BadRequest
 
 from holly_willoughbot.tables import RedditClients, RedditComments, RedditSubmissions, RedditSubreddits
 
@@ -61,7 +62,10 @@ def lock_submission(submission_id: str) -> None:
     submission = RedditSubmissions.objects().get(RedditSubmissions.submission_id == submission_id).run_sync()
     subreddit = RedditSubreddits.objects().get(RedditSubreddits.id == submission.subreddit).run_sync()
     client = reddit_client(subreddit.reddit_client)
-    client.submission(id=submission_id).mod.lock()
+    try:
+        client.submission(id=submission_id).mod.lock()
+    except BadRequest:
+        log.error(f"Failed to Lock Submission: {submission_id}, skipping in future runs")
     submission.locked = True
     submission.save().run_sync()
 
