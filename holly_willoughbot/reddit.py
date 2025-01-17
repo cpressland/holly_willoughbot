@@ -80,17 +80,20 @@ def search_comments(submission_id: str) -> None:
     for comment in client.submission(id=submission_id).comments.list():
         if not RedditComments.exists().where(RedditComments.comment_id == comment.id).run_sync():
             log.info(f"Processing Comment: {comment.id}")
-            RedditComments.insert(
-                RedditComments(
-                    comment_id=comment.id,
-                    submission_id=submission.id,
-                    subreddit=subreddit.id,
-                    author=comment.author.name if comment.author else "[deleted]",
-                    created=datetime.datetime.fromtimestamp(comment.created_utc, tz=datetime.UTC),
-                    body=comment.body,
-                    url=f"https://reddit.com{comment.permalink}",
-                    notified=False,
-                ),
-            ).run_sync()
+            try:
+                RedditComments.insert(
+                    RedditComments(
+                        comment_id=comment.id,
+                        submission_id=submission.id,
+                        subreddit=subreddit.id,
+                        author=comment.author.name if comment.author else "[deleted]",
+                        created=datetime.datetime.fromtimestamp(comment.created_utc, tz=datetime.UTC),
+                        body=comment.body,
+                        url=f"https://reddit.com{comment.permalink}",
+                        notified=False,
+                    ),
+                ).run_sync()
+            except AttributeError:
+                log.error(f"Skipping Comment: {comment.id}")
             continue
         log.debug(f"Skipping Comment: {comment.id}")
