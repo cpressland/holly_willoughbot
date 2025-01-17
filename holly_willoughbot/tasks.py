@@ -43,7 +43,7 @@ def notify() -> None:
     for subreddit in RedditSubreddits.objects().where(RedditSubreddits.muted.eq(value=False)).run_sync():
         for submission in (
             RedditSubmissions.objects()
-            .where(RedditSubmissions.subreddit == subreddit.id and RedditSubmissions.notified.eq(value=False))
+            .where((RedditSubmissions.subreddit == subreddit.id) & (RedditSubmissions.notified.eq(value=False)))
             .run_sync()
         ):
             send_message(
@@ -61,7 +61,7 @@ def notify() -> None:
             submission.save().run_sync()
         for comment in (
             RedditComments.objects()
-            .where(RedditComments.subreddit == subreddit.id and RedditComments.notified.eq(value=False))
+            .where((RedditComments.subreddit == subreddit.id) & (RedditComments.notified.eq(value=False)))
             .run_sync()
         ):
             send_message(
