@@ -27,8 +27,8 @@ def lock() -> None:
     for submission in (
         RedditSubmissions.objects()
         .where(
-            RedditSubmissions.locked.eq(value=False)
-            and RedditSubmissions.created < datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(days=7),
+            (RedditSubmissions.locked.eq(value=False))
+            & (RedditSubmissions.created < datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(days=7)),
         )
         .run_sync()
     ):
