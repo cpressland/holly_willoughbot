@@ -76,3 +76,5 @@ def notify() -> None:
                     f"{comment.body}\n\n"
                 ),
             )
+            comment.notified = True
+            comment.save().run_sync()
