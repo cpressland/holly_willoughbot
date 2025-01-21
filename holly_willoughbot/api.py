@@ -1,6 +1,7 @@
 """API Functions."""
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.routing import Mount
 from piccolo.apps.user.tables import BaseUser
 from piccolo_admin.endpoints import create_admin
@@ -31,3 +32,9 @@ api = FastAPI(
         ),
     ],
 )
+
+
+@api.get("/")
+async def root_redirect() -> RedirectResponse:
+    """Redirect to the admin panel."""
+    return RedirectResponse(url="/admin")
