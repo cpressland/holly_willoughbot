@@ -1,6 +1,6 @@
 """Piccolo Admin Table Config."""
 
-from piccolo_admin.endpoints import TableConfig
+from piccolo_admin.endpoints import OrderBy, TableConfig
 
 from holly_willoughbot.tables import RedditClients, RedditComments, RedditSubmissions, RedditSubreddits, TelegramClients
 
@@ -41,11 +41,12 @@ reddit_submissions = TableConfig(
     RedditSubmissions,
     menu_group="Reddit",
     link_column=RedditSubmissions.title,
+    order_by=[OrderBy(RedditSubmissions.created, ascending=False)],
     visible_columns=[
+        RedditSubmissions.created,
         RedditSubmissions.title,
         RedditSubmissions.author,
         RedditSubreddits.subreddit,
-        RedditSubmissions.created,
         RedditSubmissions.locked,
         RedditSubmissions.notified,
     ],
@@ -55,7 +56,9 @@ reddit_comments = TableConfig(
     RedditComments,
     menu_group="Reddit",
     link_column=RedditComments.body,
+    order_by=[OrderBy(RedditComments.created, ascending=False)],
     visible_columns=[
+        RedditComments.created,
         RedditSubreddits.subreddit,
         RedditComments.author,
         RedditComments.body,
