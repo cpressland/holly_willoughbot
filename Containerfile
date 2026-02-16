@@ -1,30 +1,31 @@
-FROM mcr.microsoft.com/azurelinux/base/core:3.0 AS build
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+FROM docker.io/debian:13 AS build
+COPY --from=ghcr.io/astral-sh/uv:0.10.0 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
-    UV_PYTHON=python3.13 \
-    UV_PROJECT_ENVIRONMENT=/app
+    UV_PYTHON=python3.14 \
+    UV_PROJECT_ENVIRONMENT=/app \
+    UV_PYTHON_INSTALL_DIR=/usr/share/uv/python
 
-COPY pyproject.toml /_lock/
-COPY uv.lock /_lock/
-RUN --mount=type=cache,target=/root/.cache \
-    cd /_lock && \
+WORKDIR /build
+
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync \
     --locked \
     --no-dev \
     --no-install-project
 
-COPY . /src
-RUN --mount=type=cache,target=/root/.cache \
-    uv pip install \
-    --python=$UV_PROJECT_ENVIRONMENT \
-    --no-deps \
-    /src
+COPY . .
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync \
+    --locked \
+    --no-dev \
+    --no-editable
 
-FROM mcr.microsoft.com/azurelinux/base/core:3.0
-COPY --from=build /root/.local/share/uv /root/.local/share/uv
-COPY --from=build /app /app
-ENV PATH=/app/bin:$PATH
-ENV PICCOLO_CONF=holly_willoughbot.piccolo_conf
-ENTRYPOINT [ "holly" ]
+FROM gcr.io/distroless/cc-debian13:nonroot
+COPY --from=build /usr/share/uv /usr/share/uv
+COPY --from=build --chown=nonroot:nonroot /app /app
+ENV PATH=/app/bin:$PATH \
+    PICCOLO_CONF=holly_willoughbot.piccolo_conf
+ENTRYPOINT [ "/app/bin/holly" ]
