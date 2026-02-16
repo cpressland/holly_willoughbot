@@ -1,11 +1,7 @@
 """Project Settings."""
 
-from typing import TYPE_CHECKING
-
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
-
-if TYPE_CHECKING:
-    from pydantic import PostgresDsn
 
 
 class Settings(BaseSettings):

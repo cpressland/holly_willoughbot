@@ -32,7 +32,7 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D203", "D213", "D407", "FBT001", "FBT002", "W605", "COM812", "PLC0415"]
+ignore = ["D203", "D213", "D407", "FBT001", "FBT002", "W605", "COM812", "PLC0415", "TC002"]
 
 [tool.ruff.lint.per-file-ignores]
 "holly_willoughbot/migrations/**.py" = ["ALL"]
