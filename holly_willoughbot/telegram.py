@@ -28,6 +28,7 @@ def send_message(message: str, client_id: int) -> None:
             ".": "\.",
             "=": "\=",
             "+": "\+",
+            "|": "\|",
         },
     )
     try:
