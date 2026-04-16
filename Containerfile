@@ -1,4 +1,4 @@
-FROM docker.io/debian:13 AS build
+FROM docker.io/debian:trixie-20260406 AS build
 COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
